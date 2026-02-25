@@ -1,0 +1,17 @@
+# 新功能
+feat(user): add profile picture upload
+
+# 修复
+fix(payment): correct tax calculation for EU users
+
+# 文档
+docs: update API reference for v2
+
+# 重构
+refactor(store): replace Vuex with Pinia
+
+# 性能
+perf: lazy load dashboard charts
+
+# 破坏性变更
+feat!: remove deprecated /v1 API endpoints
