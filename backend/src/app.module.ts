@@ -5,6 +5,8 @@ import { ConfigurationModule } from './config/configuration.module';
 import { EnvKeys } from './config/env-keys.enum';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -27,6 +29,13 @@ import { AuthModule } from './auth/auth.module';
         
       }),
     }), UserModule, AuthModule,
+    ],
+     providers: [
+    // 全局注册 JWT 守卫（除了 @Public() 接口）
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
   ],
 })
 export class AppModule {}

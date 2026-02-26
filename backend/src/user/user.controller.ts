@@ -1,7 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller('user')
 export class UserController {
@@ -12,6 +21,7 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+//   @Public() // 如果想使某个接口公开，可以在控制器方法上使用 @Public() 装饰器
   @Get()
   findAll() {
     return this.userService.findAll();
