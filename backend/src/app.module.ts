@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ConfigurationModule } from './config/configuration.module';
 import { EnvKeys } from './config/env-keys.enum';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -24,7 +25,7 @@ import { EnvKeys } from './config/env-keys.enum';
         logging: configService.get<boolean>(EnvKeys.DB_LOGGING),
         
       }),
-    }),
+    }), UserModule,
   ],
 })
 export class AppModule {}
