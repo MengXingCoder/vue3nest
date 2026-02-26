@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ConfigurationModule } from './config/configuration.module';
 import { EnvKeys } from './config/env-keys.enum';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -25,7 +26,7 @@ import { UserModule } from './user/user.module';
         logging: configService.get<boolean>(EnvKeys.DB_LOGGING),
         
       }),
-    }), UserModule,
+    }), UserModule, AuthModule,
   ],
 })
 export class AppModule {}

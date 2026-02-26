@@ -40,14 +40,16 @@ export class UserService {
   }
 
   //根据用户名查找用户
-  async findByUsername(username: string) {
-    const res = await this.usersRepository
-      .createQueryBuilder('user')
-      .where('user.username = :username', { username })
-
-      .getOne();
-    return res;
+  // src/modules/users/users.service.ts
+async findByUsername(username: string, includePassword = false) {
+  const query = this.usersRepository
+    .createQueryBuilder('user')
+    .where('user.username = :username', { username });
+  if (includePassword) {
+    query.addSelect('user.password'); // 关键：手动添加密码字段
   }
+  return query.getOne();
+}
 
   //根据ID查找用户
   async findOne(id: number): Promise<User> {
