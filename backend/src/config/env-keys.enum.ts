@@ -1,0 +1,15 @@
+export enum EnvKeys {
+  // 基本应用相关枚举
+  NODE_ENV = 'NODE_ENV',
+  APP_PORT = 'APP_PORT',
+  API_PREFIX = 'API_PREFIX',
+
+  // 数据库相关枚举
+  DB_HOST = 'DB_HOST',
+  DB_PORT = 'DB_PORT',
+  DB_USERNAME = 'DB_USERNAME',
+  DB_PASSWORD = 'DB_PASSWORD',
+  DB_DATABASE = 'DB_DATABASE',
+  DB_SYNCHRONIZE = 'DB_SYNCHRONIZE',
+  DB_LOGGING = 'DB_LOGGING',
+}
