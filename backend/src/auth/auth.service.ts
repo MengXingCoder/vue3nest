@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from 'src/user/user.service';
+import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -8,19 +8,19 @@ import { LoginDto } from './dto/login.dto';
 @Injectable()
 export class AuthService {
   constructor(
-    private userService: UserService,
+    private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
 
   //用户注册
   async register(registerDto: RegisterDto) {
-    return this.userService.create(registerDto);
+    return this.usersService.create(registerDto);
   }
 
   //用户登录
   async login(loginDto: LoginDto) {
     // 1. 根据用户名查找用户（包含密码字段）
-    const user = await this.userService.findByUsername(loginDto.username, true);
+    const user = await this.usersService.findByUsername(loginDto.username, true);
     if (!user) {
       throw new UnauthorizedException('用户名或密码错误');
     }

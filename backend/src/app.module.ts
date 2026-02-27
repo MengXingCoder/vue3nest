@@ -3,16 +3,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ConfigurationModule } from './config/configuration.module';
 import { EnvKeys } from './config/env-keys.enum';
-import { UserModule } from './user/user.module';
+import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
+import { RolesModule } from './roles/roles.module';
+import { PermissionsModule } from './permissions/permissions.module';
 
 @Module({
   imports: [
-    ConfigurationModule, 
+    ConfigurationModule,
 
-    
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -26,11 +27,14 @@ import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
         entities: [__dirname + '/**/*.entity{.ts,.js}'], //加载所有的实体文件 映射入数据库中表，或者也可以手动加载实体文件
         synchronize: configService.get<boolean>(EnvKeys.DB_SYNCHRONIZE),
         logging: configService.get<boolean>(EnvKeys.DB_LOGGING),
-        
       }),
-    }), UserModule, AuthModule,
-    ],
-     providers: [
+    }),
+    UsersModule,
+    AuthModule,
+    RolesModule,
+    PermissionsModule,
+  ],
+  providers: [
     // 全局注册 JWT 守卫（除了 @Public() 接口）
     {
       provide: APP_GUARD,
