@@ -20,7 +20,11 @@ export class AuthService {
   //用户登录
   async login(loginDto: LoginDto) {
     // 1. 根据用户名查找用户（包含密码字段）
-    const user = await this.usersService.findByUsername(loginDto.username, true);
+    const user = await this.usersService.findByUsername(
+      loginDto.username,
+      true,
+    );
+
     if (!user) {
       throw new UnauthorizedException('用户名或密码错误');
     }
@@ -35,10 +39,18 @@ export class AuthService {
     if (!user.isActive) {
       throw new UnauthorizedException('用户已被禁用');
     }
+    // 4. 获取用户完整资料（包含角色和权限）
+    const profile = await this.usersService.findOne(user.id); // findOne 返回包含 roles 的对象
 
-    // 4. 生成 JWT payload
-    const payload = { sub: user.id, username: user.username, role: user.role };
-
+    // 5. 构造 JWT payload
+    const payload = {
+      sub: profile.id,
+      username: profile.username,
+      roles: profile.roles.map((role) => role.name), // 角色名称数组
+    };
+    // // 5. 生成 JWT payload
+    // const payload = { sub: user.id, username: user.username };
+    console.log('jwt payload', payload);
     // 5. 签名 token
     const access_token = this.jwtService.sign(payload);
 

@@ -26,7 +26,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (!user || !user.isActive) {
       throw new UnauthorizedException('用户无效或已禁用');
     }
-
-    return { id: user.id, username: user.username, role: user.role };
+    console.log('validate jwt', {
+      id: user.id,
+      username: user.username,
+      roles: user.roles.map((role) => role.name),
+    });
+    return {
+      id: user.id,
+      username: user.username,
+      roles: user.roles.map((role) => role.name),
+    };
   }
 }

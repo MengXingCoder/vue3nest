@@ -1,30 +1,22 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { Exclude } from 'class-transformer';
+import { Entity, Column, OneToMany } from 'typeorm';
+import { BaseEntity } from './base.entity';
+import { UserRole } from './user-role.entity';
 
 @Entity('users')
-export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class User extends BaseEntity {
   @Column({ length: 50, unique: true })
-  username: string; // 用户名，唯一
+  username: string;
 
   @Column({ length: 100, unique: true })
-  email: string; // 邮箱，唯一
+  email: string;
 
-  @Column({ select: false }) // 默认查询不返回密码字段
-  @Exclude() // 当使用 class-transformer 将实例转换为普通对象时排除此字段
-  password: string; // 加密后的密码
+  @Column({ select: false })
+  password: string;
 
   @Column({ name: 'is_active', default: true })
-  isActive: boolean; // 用户是否启用
+  isActive: boolean;
 
-  @Column({ nullable: true })
-  role?: string; // 简单角色字段，例如 'admin', 'user', 'root'
-
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
-
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
+  // 一个用户可以有多个角色关联（指向 UserRole 的 user 属性）
+  @OneToMany(() => UserRole, (userRole) => userRole.user)
+  userRoles: UserRole[];
 }
