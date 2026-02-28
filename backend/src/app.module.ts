@@ -9,6 +9,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { RolesModule } from './roles/roles.module';
 import { PermissionsModule } from './permissions/permissions.module';
+import { MenusModule } from './menus/menus.module';
+import { RolesGuard } from './common/guards/roles.guard';
 
 @Module({
   imports: [
@@ -33,12 +35,17 @@ import { PermissionsModule } from './permissions/permissions.module';
     AuthModule,
     RolesModule,
     PermissionsModule,
+    MenusModule,
   ],
   providers: [
     // 全局注册 JWT 守卫（除了 @Public() 接口）
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })

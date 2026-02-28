@@ -13,12 +13,18 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { Public } from 'src/common/decorators/public.decorator';
-
+import { Req } from '@nestjs/common';
+import { type Request } from 'express';
+import { User } from 'src/entities/user.entity';
+import { MenusService } from 'src/menus/menus.service';
 @ApiTags('用户管理')
 @ApiBearerAuth()
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly menusService: MenusService,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: '创建用户' })
@@ -26,6 +32,17 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+  @Get('profile/menus')
+  @ApiOperation({ summary: '获取当前用户的菜单树' })
+  async getCurrentUserMenus(@Req() req: Request) {
+    // const user = req.user; // 由 JwtAuthGuard 挂载的用户信息
+    // if (!user) return null;
+    // const userId = user.id;
+    const user = req.user as { id: number; username: string };
+    const userId = user.id;
+    const userPermissions = await this.usersService.getUserPermissions(userId);
+    return this.menusService.findMenuTreeByPermissions(userPermissions);
+  }
   @Get(':id')
   @ApiOperation({ summary: '获取单个用户详情' })
   findOne(@Param('id', ParseIntPipe) id: number) {
