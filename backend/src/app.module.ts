@@ -11,6 +11,7 @@ import { RolesModule } from './modules/roles/roles.module';
 import { PermissionsModule } from './modules/permissions/permissions.module';
 import { MenusModule } from './modules/menus/menus.module';
 import { RolesGuard } from './common/guards/roles.guard';
+import { SeedModule } from './modules/seed-menu-permission/seed.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { RolesGuard } from './common/guards/roles.guard';
     RolesModule,
     PermissionsModule,
     MenusModule,
+    SeedModule,
   ],
   providers: [
     // 全局注册 JWT 守卫（除了 @Public() 接口）
