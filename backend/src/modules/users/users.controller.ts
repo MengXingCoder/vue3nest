@@ -16,7 +16,7 @@ import { Public } from 'src/common/decorators/public.decorator';
 import { Req } from '@nestjs/common';
 import { type Request } from 'express';
 import { User } from 'src/entities/user.entity';
-import { MenusService } from 'src/menus/menus.service';
+import { MenusService } from 'src/modules/menus/menus.service';
 @ApiTags('用户管理')
 @ApiBearerAuth()
 @Controller('users')

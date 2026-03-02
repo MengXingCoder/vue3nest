@@ -6,7 +6,7 @@ import { User } from 'src/entities/user.entity';
 import { UserRole } from 'src/entities/user-role.entity';
 import { RolesModule } from '../roles/roles.module';
 import { Role } from 'src/entities/role.entity';
-import { MenusModule } from 'src/menus/menus.module';
+import { MenusModule } from 'src/modules/menus/menus.module';
 
 @Module({
   imports: [
