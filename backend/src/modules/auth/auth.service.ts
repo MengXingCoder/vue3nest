@@ -56,7 +56,9 @@ export class AuthService {
 
     // 6. 返回 token 和用户基本信息
     return {
-      access_token,
+      data: {
+        access_token,
+      },
     };
   }
 }

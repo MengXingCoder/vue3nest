@@ -8,6 +8,7 @@ async function bootstrap() {
   const API_PREFIX = configservice.get<string>('API_PREFIX', 'api');
   app.setGlobalPrefix(API_PREFIX);
   const APP_PORT = configservice.get<number>('APP_PORT', 3000);
+  app.enableCors();
   // Swagger 配置
   const swaggerConfig = new DocumentBuilder()
     .setTitle('后台管理系统 API')
