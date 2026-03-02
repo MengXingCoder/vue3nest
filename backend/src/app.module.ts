@@ -28,7 +28,7 @@ import { RolesGuard } from './common/guards/roles.guard';
         database: configService.get<string>(EnvKeys.DB_DATABASE),
         entities: [__dirname + '/**/*.entity{.ts,.js}'], //加载所有的实体文件 映射入数据库中表，或者也可以手动加载实体文件
         synchronize: configService.get<boolean>(EnvKeys.DB_SYNCHRONIZE),
-        logging: configService.get<boolean>(EnvKeys.DB_LOGGING),
+        // logging: configService.get<boolean>(EnvKeys.DB_LOGGING),
       }),
     }),
     UsersModule,
