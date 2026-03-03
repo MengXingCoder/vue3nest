@@ -1,71 +1,107 @@
+
 <template>
   <div class="container">
-    <el-form
-      ref="ruleFormRef"
-      :model="ruleForm"
-      status-icon
-      :rules="rules"
-      label-width="auto"
-      class="demo-ruleForm"
-    >
-      <el-form-item label="用户名:" prop="username" style="width: 300px">
-        <el-input v-model="ruleForm.username" type="text" />
-      </el-form-item>
-      <el-form-item label="密码:" prop="password" style="width: 300px">
-        <el-input v-model="ruleForm.password" type="password" />
-      </el-form-item>
-
-      <el-form-item>
-        <el-button type="primary" @click="submitForm(ruleFormRef)">
-          登录
-        </el-button>
-        <el-button @click="resetForm(ruleFormRef)">重置</el-button>
-      </el-form-item>
-    </el-form>
+    <div class="login-container">
+      <el-form ref="formRef" :model="form" :rules="rules" class="login-form">
+        <h2 class="title">通用管理系统</h2>
+        <el-form-item prop="username">
+          <el-input
+            v-model="form.username"
+            placeholder="用户名"
+            prefix-icon="User"
+          />
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input
+            v-model="form.password"
+            type="password"
+            placeholder="密码"
+            prefix-icon="Lock"
+            show-password
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            type="primary"
+            :loading="loading"
+            style="width: 100%"
+            @click="handleLogin"
+          >
+            登录
+          </el-button>
+        </el-form-item>
+      </el-form>
+    </div>
   </div>
 </template>
+
+
 <script setup lang="ts">
-import { onBeforeMount, onMounted } from 'vue';
-import { reactive, ref } from 'vue';
+import { ref, reactive } from 'vue';
 
-import type { FormInstance, FormRules } from 'element-plus';
 
-const ruleFormRef = ref<FormInstance>();
-const ruleForm = reactive({
-  password: '',
-  username: '',
+import { ElMessage, type FormInstance, type FormRules } from 'element-plus';
+
+import axios from 'axios';
+
+const form = reactive({
+  username: 'root',
+  password: '123456',
 });
+const loading = ref(false);
+const formRef = ref<FormInstance>();
 
-const rules = reactive<FormRules<typeof ruleForm>>({
-  password: [{ required: true, message: '请输入登录密码', trigger: 'blur' }],
-  username: [{ required: true, message: '请输入登录用户名', trigger: 'blur' }],
-});
-
-const submitForm = (formEl: FormInstance | undefined) => {
-  if (!formEl) return;
-  formEl.validate(valid => {
-    if (valid) {
-      console.log('submit!');
-    } else {
-      console.log('error submit!');
-    }
-  });
+const rules: FormRules = {
+  username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+  password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
 };
 
-const resetForm = (formEl: FormInstance | undefined) => {
-  if (!formEl) return;
-  formEl.resetFields();
+const handleLogin = async () => {
+  await formRef.value?.validate();
+  loading.value = true;
+  try {
+    const res = await axios.post('/api/auth/login', form);
+    console.log(res.data.data.access_token);
+    localStorage.setItem('token', res.data.data.access_token);
+    const menus = await axios.get('/api/menus/tree', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    ElMessage.success('登录成功');
+  } catch (error) {
+    // 错误已在拦截器处理
+  } finally {
+    loading.value = false;
+  }
 };
-onBeforeMount(() => {});
-onMounted(() => {});
 </script>
-<style lang="scss" scoped>
+
+<style scoped lang="scss">
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 .container {
+  height: 100vh;
+  width: 100vw;
+}
+.login-container {
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: solid 1px blue;
-  height: 100%;
-  width: 100%;
+  background-color: #2d3a4b;
+}
+.login-form {
+  width: 400px;
+  padding: 40px;
+  background: #fff;
+  border-radius: 8px;
+}
+.title {
+  text-align: center;
+  margin-bottom: 30px;
 }
 </style>

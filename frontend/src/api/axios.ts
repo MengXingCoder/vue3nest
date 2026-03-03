@@ -12,10 +12,9 @@ const service = axios.create({
 // 请求拦截器：自动加 token
 service.interceptors.request.use(
     (config) => {
-        // if (storeToken.token) {
-        //     config.headers = config.headers || {}
-        //     config.headers.Authorization = `Bearer ${storeToken.token}`
-        // }
+         const token = localStorage.getItem('token'); 
+            config.headers.Authorization = `Bearer ${token}`
+        console.log('Request config:', config,token)
 
         return config
     },
