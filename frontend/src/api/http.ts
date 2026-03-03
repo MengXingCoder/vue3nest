@@ -25,7 +25,7 @@ export interface LoginToken {
 export const getUsers = (params?: Record<string, unknown>) =>
   http.get<User[]>('/user', params); 
 export const login = (data: LoginReq) => http.post<LoginToken>('/auth/login', data)
-
+export const getMenus = () => http.get('/menus/tree')
 // Record是TypeScript 内置工具类型
 // 表示：“一个对象，它的所有 key 是 string 类型，所有 value 是 unknown 类型(就是value 有可能是 number,string,{},[])”
 // const params: Record<string, unknown> = {

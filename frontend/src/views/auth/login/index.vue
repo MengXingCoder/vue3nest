@@ -1,4 +1,3 @@
-
 <template>
   <div class="container">
     <div class="login-container">
@@ -35,15 +34,13 @@
   </div>
 </template>
 
-
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
-
-
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus';
+import { login, getMenus } from '@/api/http';
+import { useUserStore } from '@/stores/user';
 
-import axios from 'axios';
-
+const userStore = useUserStore();
 const form = reactive({
   username: 'root',
   password: '123456',
@@ -60,17 +57,18 @@ const handleLogin = async () => {
   await formRef.value?.validate();
   loading.value = true;
   try {
-    const res = await axios.post('/api/auth/login', form);
-    console.log(res.data.data.access_token);
-    localStorage.setItem('token', res.data.data.access_token);
-    const menus = await axios.get('/api/menus/tree', {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
+    const res = await login(form);
+    userStore.setToken(res.data.access_token);
+    const res1 = await getMenus();
     ElMessage.success('登录成功');
   } catch (error) {
-    // 错误已在拦截器处理
+    if (error instanceof Error) {
+      // console.log(error.code)
+    } else {
+      // 处理非 HttpError
+      // ElMessage.error('登录失败，请稍后重试')
+      console.error('[Login] Unexpected error:', error);
+    }
   } finally {
     loading.value = false;
   }
