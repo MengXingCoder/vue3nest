@@ -5,6 +5,7 @@ import { RegisterDto } from './dto/register.dto';
 
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Public } from 'src/common/decorators/public.decorator';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
 
 @ApiTags('认证')
 @Controller('auth')
@@ -28,5 +29,12 @@ export class AuthController {
   @ApiResponse({ status: 401, description: '用户名或密码错误' })
   login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
+  }
+  @Public()
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: '刷新access token' })
+  async refresh(@Body() refreshTokenDto: RefreshTokenDto) {
+    return this.authService.refreshAccessToken(refreshTokenDto.refresh_token);
   }
 }
