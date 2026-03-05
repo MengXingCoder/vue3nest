@@ -1,15 +1,20 @@
 <template>
   <div>
-    <div class="topTitleSty">
-      <img style="width: 36px; margin: 0 6px 0 6px" src="@/assets/icon.webp" />
-      <div style="color: #383853; opacity: 1; font-size: 22px">通用系统</div>
-    </div>
-    <div>
+    <div class="sidebar" :class="{ 'is-collapse': useMenuCollapse.isCollapse }">
+      <div class="logo-container">
+        <img class="logo-img" src="@/assets/icon.webp" alt="logo" />
+        <span
+          class="logo-text"
+          :class="{ 'is-collapse': useMenuCollapse.isCollapse }"
+          >通用系统</span
+        >
+      </div>
       <el-menu
+        :collapse="useMenuCollapse.isCollapse"
+        :collapse-transition="false"
         :default-active="activeMenu"
         :default-openeds="defaultOpeneds"
         :unique-opened="true"
-        :collapse-transition="false"
         router
         background-color="#FFFFFF"
         text-color="#29343D"
@@ -28,11 +33,13 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { useMenuStore } from '@/stores/menu';
+import { useMenuStore,useMenuCollapseStore } from '@/stores/menu';
 import MenuItem from './MenuItem.vue';
 
-const route = useRoute();
+
 const menuStore = useMenuStore();
+const route = useRoute();
+const useMenuCollapse = useMenuCollapseStore();
 
 // 当前激活的菜单路径
 const activeMenu = computed(() => route.path);
@@ -77,14 +84,70 @@ const defaultOpeneds = computed(() => {
 .el-menu {
   border: none;
 }
-.el-menu:not(.el-menu--collapse) {
-  width: 230px;
-  background-color: #fdfeff;
-}
 .el-menu-item:hover {
   background-color: #3a3939;
 }
 .el-menu-item.is-active {
   background-color: #ac8585;
+}
+.sidebar {
+  width: 250px;
+  //   background-color: #304156;
+  transition: width 0.3s ease;
+  overflow-x: hidden;
+  height: 100vh; /* 确保侧边栏占满全高 */
+}
+
+.sidebar.is-collapse {
+  width: 64px; /* 必须与 el-menu 折叠宽度一致 */
+}
+
+.logo-img {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0; /* 防止图片被压缩 */
+  margin: 0 12px;
+}
+.logo-container {
+  display: flex;
+  align-items: center;
+  height: 60px; /* 固定高度，避免抖动 */
+  padding: 0 6px;
+  overflow: hidden; /* 防止文字溢出造成滚动条 */
+}
+.logo-text {
+  font-size: 22px;
+  color: #383853;
+  white-space: nowrap; /* 文字不换行 */
+  transition:
+    opacity 0.2s ease,
+    width 0.2s ease; /* 添加过渡 */
+  opacity: 1;
+  width: auto; /* 初始宽度由内容决定 */
+  overflow: hidden; /* 隐藏溢出的文字 */
+}
+
+/* 折叠时文字隐藏 */
+.logo-text.is-collapse {
+  opacity: 0;
+  width: 0; 
+  margin-left: 0;
+}
+/* 菜单背景透明（继承父级背景） */
+.el-menu-vertical {
+  border-right: none;
+  background-color: transparent !important;
+}
+
+/* 折叠时隐藏菜单文字 */
+:deep(.el-menu--collapse) .el-menu-item span,
+:deep(.el-menu--collapse) .el-sub-menu .el-sub-menu__title span {
+  display: none;
+}
+
+:deep(.el-menu--collapse) .el-menu-item,
+:deep(.el-menu--collapse) .el-sub-menu .el-sub-menu__title {
+  justify-content: center;
+  padding: 0;
 }
 </style>

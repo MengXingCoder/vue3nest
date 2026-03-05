@@ -1,8 +1,8 @@
 <template>
   <div class="app-wrapper">
     <!-- 侧边栏 -->
-    <div class="sidebar-container" :class="{ collapse: isCollapse }">
-      <SidebarMenu :is-collapse="isCollapse" />
+    <div class="sidebar-container">
+      <SidebarMenu />
     </div>
     <!-- 主内容区 -->
     <div class="main-container">
@@ -19,15 +19,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
 import SidebarMenu from '@/components/SidebarMenu.vue';
 import AppHeader from '@/components/AppHeader.vue';
-
-const isCollapse = ref(false);
-
-const toggleCollapse = () => {
-  isCollapse.value = !isCollapse.value;
-};
 </script>
 
 <style lang="scss" scoped>
@@ -35,16 +28,7 @@ const toggleCollapse = () => {
   display: flex;
   height: 100vh;
 }
-.sidebar-container {
-  width: 230px;
-  background-color: solid 1px #fdfeff;
-  transition: width 0.3s;
-  height: 100%; /* 继承父容器高度 */
-  overflow-y: auto; /* 如果菜单项过多，左侧内部滚动 */
-  &.collapse {
-    width: 64px;
-  }
-}
+
 .main-container {
   flex: 1;
   display: flex;

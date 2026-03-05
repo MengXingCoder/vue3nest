@@ -116,3 +116,15 @@ export const useMenuStore = defineStore('menu', () => {
 
   return { treeMenu, dynamicRoutes, fetchMenu }
 })
+
+
+export const useMenuCollapseStore = defineStore('menuCollapse', () => {
+  const isCollapse = ref(false); // 默认为 false
+
+  // 直接设置折叠状态
+  const setCollapse = (value: any) => {
+    isCollapse.value = value;
+  };
+
+  return { isCollapse, setCollapse };
+});

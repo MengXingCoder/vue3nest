@@ -1,26 +1,12 @@
 <template>
   <div>
-    <div
-      style="
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        height: 60px;
-      "
-    >
-      <div
-        style="
-          margin-left: 12px;
-          height: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        "
-      >
+    <div class="topSty">
+      <div class="topLeft">
         <div>
           <div class="collapse-btn" @click="toggleCollapse">
-            <el-icon v-if="!isCollapse"><Fold /></el-icon>
-            <el-icon v-else><Expand /></el-icon>
+            <el-icon>
+              <component :is="collapseIcon" />
+            </el-icon>
           </div>
         </div>
         <div>
@@ -74,23 +60,28 @@
           <el-icon><Avatar /></el-icon>
         </div>
       </div>
+      <!-- 这是用户点击的菜单记录并展示 -->
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import { Expand, Fold } from '@element-plus/icons-vue';
-
-import { useRouter, useRoute } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { computed } from 'vue';
 
 const isCollapse = ref(false); // 折叠状态
+import { useMenuCollapseStore } from '@/stores/menu';
 
+const useMenuCollapse = useMenuCollapseStore();
+const collapseIcon = computed(() =>
+  useMenuCollapse.isCollapse ? Expand : Fold
+);
 // 切换折叠
 const toggleCollapse = () => {
-  isCollapse.value = !isCollapse.value;
+  useMenuCollapse.isCollapse = isCollapse.value = !isCollapse.value;
+  console.log(isCollapse.value);
 };
 
-const router = useRouter();
 const route = useRoute();
 import { onBeforeMount, onMounted, ref } from 'vue';
 onBeforeMount(() => {});
@@ -137,4 +128,18 @@ const breadcrumbs = computed(() => {
     }));
 });
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.topSty {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  .topLeft {
+    margin-left: 12px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+</style>
