@@ -8,6 +8,20 @@ export const staticRoutes: RouteRecordRaw[] = [
     meta: { title: '登录页面', isHideTab: true },
   },
   {
+    path: '/',
+    name: 'Layout',
+    component: () => import('@/layouts/index.vue'),
+    redirect: '/databoard',
+    children: [
+      {
+        path: 'databoard',
+        name: 'databoard',
+        component: () => import('@/views/databoard/workspace/index.vue'),
+        meta: { title: '首页', icon: 'Odometer' },
+      },
+    ],
+  },
+  {
     path: '/register',
     name: 'register',
     component: () => import('@/views/auth/register/index.vue'),
@@ -25,11 +39,11 @@ export const staticRoutes: RouteRecordRaw[] = [
     name: 'Exception500',
     component: () => import('@/views/exception/500/index.vue'),
     meta: { title: '500', isHideTab: true },
-    },
-     {
-    path: '/:pathMatch(.*)',
-    name: 'Exception404',
-    component: () => import('@/views/exception/404/index.vue'),
-    meta: { title: '404', isHideTab: true }
-  }
+  },
+  //   {
+  //     path: '/:pathMatch(.*)',
+  //     name: 'Exception404',
+  //     component: () => import('@/views/exception/404/index.vue'),
+  //     meta: { title: '404', isHideTab: true },
+  //   },
 ];

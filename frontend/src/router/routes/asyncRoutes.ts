@@ -1,6 +1,5 @@
-import type { RouteRecordRaw } from "vue-router";
+import type { RouteRecordRaw } from 'vue-router'
 
+const asyncRoutes: RouteRecordRaw[] = []
 
-export const asyncRoutes: RouteRecordRaw[] = [
-    
-]
+export default asyncRoutes

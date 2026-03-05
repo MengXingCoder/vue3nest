@@ -1,25 +1,30 @@
-import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
 
 export const useUserStore = defineStore('user', () => {
-  
-  const token = ref(localStorage.getItem('token') || ''); 
+  const token = ref(localStorage.getItem('token') || '')
+  const refreshToken = ref(localStorage.getItem('refreshToken') || '')
 
-  // 设置 token
-  function setToken(newToken:string) {
-    token.value = newToken;
-    localStorage.setItem('token', newToken); 
+  function setToken(newToken: string, newRefreshToken?: string) {
+    token.value = newToken
+    localStorage.setItem('token', newToken)
+    if (newRefreshToken) {
+      refreshToken.value = newRefreshToken
+      localStorage.setItem('refreshToken', newRefreshToken)
+    }
   }
 
-  // 清除 token（登出时调用）
   function removeToken() {
-    token.value = '';
-    localStorage.removeItem('token');
+    token.value = ''
+    refreshToken.value = ''
+    localStorage.removeItem('token')
+    localStorage.removeItem('refreshToken')
   }
 
   return {
     token,
+    refreshToken,
     setToken,
     removeToken,
-  };
-});
+  }
+})
