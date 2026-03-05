@@ -6,7 +6,7 @@
     </div>
     <!-- 主内容区 -->
     <div class="main-container">
-      <AppHeader :collapse="isCollapse" @toggle-collapse="toggleCollapse" />
+      <AppHeader />
       <div class="app-main">
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
@@ -37,8 +37,10 @@ const toggleCollapse = () => {
 }
 .sidebar-container {
   width: 230px;
-  background-color: #fdfeff;
+  background-color: solid 1px #fdfeff;
   transition: width 0.3s;
+  height: 100%; /* 继承父容器高度 */
+  overflow-y: auto; /* 如果菜单项过多，左侧内部滚动 */
   &.collapse {
     width: 64px;
   }
@@ -47,7 +49,10 @@ const toggleCollapse = () => {
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: #f0f2f5;
+  background: rgb(250, 251, 252);
+
+  height: 100%; /* 同样占满高度 */
+  overflow-y: auto; /* 右侧内容过多时出现滚动条 */
 }
 .app-main {
   flex: 1;

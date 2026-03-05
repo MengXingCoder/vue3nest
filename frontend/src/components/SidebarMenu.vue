@@ -1,16 +1,15 @@
 <template>
   <div>
-    <div
-      style="height: 60px; width: 230px; border: solid 1px gray; padding: 5px"
-    >
-      <img style="width: 36px" src="@/assets/icon.webp" />
+    <div class="topTitleSty">
+      <img style="width: 36px; margin: 0 6px 0 6px" src="@/assets/icon.webp" />
+      <div style="color: #383853; opacity: 1; font-size: 22px">通用系统</div>
     </div>
     <div>
       <el-menu
         :default-active="activeMenu"
         :default-openeds="defaultOpeneds"
-        :collapse="isCollapse"
         :unique-opened="true"
+        :collapse-transition="false"
         router
         background-color="#FFFFFF"
         text-color="#29343D"
@@ -34,10 +33,6 @@ import MenuItem from './MenuItem.vue';
 
 const route = useRoute();
 const menuStore = useMenuStore();
-
-const props = defineProps<{
-  isCollapse: boolean;
-}>();
 
 // 当前激活的菜单路径
 const activeMenu = computed(() => route.path);
@@ -71,6 +66,17 @@ const defaultOpeneds = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+.topTitleSty {
+  height: 60px;
+  width: 230px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.el-menu {
+  border: none;
+}
 .el-menu:not(.el-menu--collapse) {
   width: 230px;
   background-color: #fdfeff;
