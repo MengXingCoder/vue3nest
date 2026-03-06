@@ -187,7 +187,8 @@
                       "
                     >
                       1、你有一个流程审批申请 请注意查看。
-                    </div> </el-tab-pane>
+                    </div>
+                  </el-tab-pane>
                 </el-tabs>
               </div>
             </div>
@@ -197,10 +198,37 @@
           <el-icon><Setting /></el-icon>
         </div>
         <div style="margin-right: 20px">
-          <el-icon><Avatar /></el-icon>
+          <el-popover
+            v-model:visible="profileVisible"
+            placement="bottom-start"
+            :width="80"
+            trigger="hover"
+            :offset="0"
+          >
+            <template #reference>
+              <el-icon><Avatar /></el-icon>
+            </template>
+
+            <div class="profile-pages-popover">
+              <div
+                v-for="item in profile"
+                :key="item.meta.id"
+                @click="goToPage(item.path)"
+              >
+                <p style="width: 120px; margin: 12px 0; text-align: center">
+                  <el-icon
+                    ><component :is="item.meta.icon.replace('el-icon-', '')"
+                  /></el-icon>
+                  <span>{{ item.name }}</span>
+                </p>
+              </div>
+              <el-button style="margin-left: 20px" @click="logout"
+                >退出登录</el-button
+              >
+            </div>
+          </el-popover>
         </div>
       </div>
-      <!-- 这是用户点击的菜单记录并展示 -->
     </div>
   </div>
 </template>
@@ -211,17 +239,17 @@ import { useFullscreen } from '@vueuse/core';
 import { onBeforeMount, onMounted, inject, ref, computed } from 'vue';
 import { useMenuCollapseStore } from '@/stores/menu';
 import { useRouter } from 'vue-router';
+import type { TabsPaneContext } from 'element-plus';
+import { useUserStore } from '@/stores/user';
 onBeforeMount(() => {});
 onMounted(() => {});
 const router = useRouter();
 const isCollapse = ref(false); // 折叠状态
 const popoverVisible = ref(false);
+const profileVisible = ref(true);
 const useMenuCollapse = useMenuCollapseStore();
-
-import type { TabsPaneContext } from 'element-plus';
-
 const activeName = ref('first');
-
+const useStore = useUserStore();
 const handleClick = (tab: TabsPaneContext, event: Event) => {
   console.log(tab, event);
 };
@@ -281,6 +309,14 @@ const handleRefresh = () => {
 const goToPage = (path: string) => {
   popoverVisible.value = false;
   router.push(path);
+};
+//退出登录
+const logout = async () => {
+  console.log('logout');
+  useStore.removeToken();
+  router.push('/login');
+  //后续还需添加退出登录逻辑
+  //   const res = await http.post('/auth/logout');
 };
 //常用入口功能示例
 const commonPages = [
@@ -378,18 +414,6 @@ const profile = [
     meta: {
       hidden: false,
       icon: 'el-icon-ChatLineRound',
-      id: 19,
-      permissionCodes: ['profile:info'],
-      sort: 1,
-      title: '信息查看',
-    },
-  },
-  {
-    name: '功能开发中...',
-    path: '',
-    meta: {
-      hidden: false,
-      icon: 'el-icon-MoreFilled',
       id: 19,
       permissionCodes: ['profile:info'],
       sort: 1,
@@ -500,5 +524,13 @@ const profile = [
   .el-tabs__header .is-top > .el-tabs__nav-scroll {
     margin-left: 30px;
   }
+}
+
+.profile-pages-popover {
+  padding: 0 !important;
+  width: 140px;
+  height: 120px;
+  overflow: hidden;
+  border-radius: 6px;
 }
 </style>
