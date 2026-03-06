@@ -10,10 +10,16 @@
           </div>
         </div>
         <div>
-          <el-icon style="margin: 0 20px"><Refresh /></el-icon>
+          <el-icon
+            style="margin: 0 20px"
+            @click="handleRefresh"
+            class="refresh-icon"
+            title="刷新"
+            ><Refresh
+          /></el-icon>
         </div>
         <div>
-          <el-icon><Menu /></el-icon>
+          <el-icon><Grid /></el-icon>
         </div>
         <div style="height: 17px; margin-left: 20px; white-space: nowrap">
           <el-breadcrumb separator="/" class="breadcrumb">
@@ -49,12 +55,15 @@
         </div>
         <div style="margin: 0 20px">
           <!-- <el-icon><FullScreen /></el-icon> -->
-         <el-tooltip :content="isFullscreen ? '退出全屏' : '全屏'" placement="bottom">
-        <el-icon class="fullscreen-icon" @click="toggle">
-          <FullScreen v-if="!isFullscreen" />
-          <Aim v-else />
-        </el-icon>
-      </el-tooltip>
+          <el-tooltip
+            :content="isFullscreen ? '退出全屏' : '全屏'"
+            placement="bottom"
+          >
+            <el-icon class="fullscreen-icon" @click="toggle">
+              <FullScreen v-if="!isFullscreen" />
+              <Aim v-else />
+            </el-icon>
+          </el-tooltip>
         </div>
         <div>
           <el-icon><ChatSquare /></el-icon>
@@ -73,9 +82,10 @@
 <script setup lang="ts">
 import { Expand, Fold, FullScreen, Aim } from '@element-plus/icons-vue';
 import { useRoute } from 'vue-router';
-import { useFullscreen } from '@vueuse/core' 
-import { onBeforeMount, onMounted, ref,computed } from 'vue';
+import { useFullscreen } from '@vueuse/core';
+import { onBeforeMount, onMounted, ref, computed } from 'vue';
 import { useMenuCollapseStore } from '@/stores/menu';
+import { inject } from 'vue';
 onBeforeMount(() => {});
 onMounted(() => {});
 const isCollapse = ref(false); // 折叠状态
@@ -90,10 +100,10 @@ const toggleCollapse = () => {
 };
 
 defineProps<{
-  collapse: boolean
-}>()
+  collapse: boolean;
+}>();
 
-const emit = defineEmits(['toggle-collapse'])
+const emit = defineEmits(['toggle-collapse']);
 
 const route = useRoute();
 
@@ -139,9 +149,16 @@ const breadcrumbs = computed(() => {
     }));
 });
 
-const { isFullscreen, toggle } = useFullscreen()
+//全屏方法
+const { isFullscreen, toggle } = useFullscreen();
 
+// 拿到顶级组件的刷新方法
+const refreshView = inject('refreshView') as () => void;
 
+//点击执行刷新方法
+const handleRefresh = () => {
+  refreshView();
+};
 </script>
 <style lang="scss" scoped>
 .topSty {

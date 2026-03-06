@@ -10,7 +10,7 @@
       <div class="app-main">
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
-            <component :is="Component" />
+            <component :is="Component" :key="refreshKey"/>
           </transition>
         </router-view>
       </div>
@@ -21,14 +21,26 @@
 <script setup lang="ts">
 import SidebarMenu from '@/components/menu/SidebarMenu.vue';
 import AppHeader from '@/components/menu/AppHeader.vue';
-import { ref } from 'vue';
+import { ref ,provide} from 'vue';
 // 侧边栏折叠状态
 const isCollapse = ref(false)
+
 
 // 切换折叠
 const toggleCollapse = () => {
   isCollapse.value = !isCollapse.value
 }
+
+// 刷新路由的key
+const refreshKey = ref(0)
+
+// 刷新当前路由视图的方法
+const refreshView = () => {
+  refreshKey.value = Date.now() // 改变 key 触发重新渲染
+}
+
+// 给后代组件提供刷新方法
+provide('refreshView', refreshView)
 </script>
 
 <style lang="scss" scoped>
