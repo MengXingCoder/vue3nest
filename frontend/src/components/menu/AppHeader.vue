@@ -15,7 +15,7 @@
         <div>
           <el-icon><Menu /></el-icon>
         </div>
-        <div style="height: 17px; margin-left: 20px">
+        <div style="height: 17px; margin-left: 20px; white-space: nowrap">
           <el-breadcrumb separator="/" class="breadcrumb">
             <el-breadcrumb-item
               v-for="(item, index) in breadcrumbs"
@@ -48,7 +48,13 @@
           </el-select>
         </div>
         <div style="margin: 0 20px">
-          <el-icon><FullScreen /></el-icon>
+          <!-- <el-icon><FullScreen /></el-icon> -->
+         <el-tooltip :content="isFullscreen ? '退出全屏' : '全屏'" placement="bottom">
+        <el-icon class="fullscreen-icon" @click="toggle">
+          <FullScreen v-if="!isFullscreen" />
+          <Aim v-else />
+        </el-icon>
+      </el-tooltip>
         </div>
         <div>
           <el-icon><ChatSquare /></el-icon>
@@ -65,27 +71,32 @@
   </div>
 </template>
 <script setup lang="ts">
-import { Expand, Fold } from '@element-plus/icons-vue';
+import { Expand, Fold, FullScreen, Aim } from '@element-plus/icons-vue';
 import { useRoute } from 'vue-router';
-import { computed } from 'vue';
-
-const isCollapse = ref(false); // 折叠状态
+import { useFullscreen } from '@vueuse/core' 
+import { onBeforeMount, onMounted, ref,computed } from 'vue';
 import { useMenuCollapseStore } from '@/stores/menu';
-
+onBeforeMount(() => {});
+onMounted(() => {});
+const isCollapse = ref(false); // 折叠状态
 const useMenuCollapse = useMenuCollapseStore();
 const collapseIcon = computed(() =>
   useMenuCollapse.isCollapse ? Expand : Fold
 );
-// 切换折叠
+// 侧边栏菜单切换折叠
 const toggleCollapse = () => {
   useMenuCollapse.isCollapse = isCollapse.value = !isCollapse.value;
   console.log(isCollapse.value);
 };
 
+defineProps<{
+  collapse: boolean
+}>()
+
+const emit = defineEmits(['toggle-collapse'])
+
 const route = useRoute();
-import { onBeforeMount, onMounted, ref } from 'vue';
-onBeforeMount(() => {});
-onMounted(() => {});
+
 const value = ref('');
 
 const options = [
@@ -127,6 +138,10 @@ const breadcrumbs = computed(() => {
       path: item.path,
     }));
 });
+
+const { isFullscreen, toggle } = useFullscreen()
+
+
 </script>
 <style lang="scss" scoped>
 .topSty {

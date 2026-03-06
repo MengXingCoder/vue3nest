@@ -6,7 +6,7 @@
     </div>
     <!-- 主内容区 -->
     <div class="main-container">
-      <AppHeader />
+      <AppHeader :collapse="isCollapse" @toggle-collapse="toggleCollapse" />
       <div class="app-main">
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
@@ -19,8 +19,16 @@
 </template>
 
 <script setup lang="ts">
-import SidebarMenu from '@/components/SidebarMenu.vue';
-import AppHeader from '@/components/AppHeader.vue';
+import SidebarMenu from '@/components/menu/SidebarMenu.vue';
+import AppHeader from '@/components/menu/AppHeader.vue';
+import { ref } from 'vue';
+// 侧边栏折叠状态
+const isCollapse = ref(false)
+
+// 切换折叠
+const toggleCollapse = () => {
+  isCollapse.value = !isCollapse.value
+}
 </script>
 
 <style lang="scss" scoped>
