@@ -1,3 +1,4 @@
+import type { AxiosRequestConfig } from 'axios';
 import { http } from './axios';
 
 // 定义接口数据类型（统一管理）
@@ -21,9 +22,11 @@ export interface refreshToken {
 }
 
 // 刷新 token
-
-export const getRefreshToken = (data: refreshToken) =>
-  http.post<LoginToken & refreshToken>('/auth/refresh', data);
+// export const getRefreshToken = (data: { refresh_token: string }, config?: AxiosRequestConfig) => {
+//   return service.post('/auth/refresh', data, config);
+// };
+export const getRefreshToken = (data: refreshToken,config?: AxiosRequestConfig) =>
+  http.post<LoginToken & refreshToken>('/auth/refresh', data,config);
 export const getUsers = (params?: Record<string, unknown>) =>
   http.get<User[]>('/user', params);
 export const login = (data: LoginReq) =>

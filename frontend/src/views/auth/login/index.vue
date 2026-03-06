@@ -44,7 +44,7 @@ import { useRouter } from 'vue-router';
 import type { RouteRecordRaw } from 'vue-router';
 const userStore = useUserStore();
 const form = reactive({
-  username: 'admin',
+  username: 'user',
   password: '123456',
 });
 const loading = ref(false);

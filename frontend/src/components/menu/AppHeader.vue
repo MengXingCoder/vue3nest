@@ -19,7 +19,39 @@
           /></el-icon>
         </div>
         <div>
-          <el-icon><Grid /></el-icon>
+          <el-popover
+            v-model:visible="popoverVisible"
+            placement="bottom-start"
+            :width="600"
+            trigger="hover"
+            :offset="0"
+            popper-class="common-pages-popover"
+          >
+            <template #reference>
+              <el-icon class="grid-icon">
+                <Grid />
+              </el-icon>
+            </template>
+            <!-- 卡片内容：左右分栏 -->
+            <div class="popover-content">
+              <!-- 左侧：常用入口网格 -->
+              <div class="left-grid">
+                <div
+                  v-for="item in commonPages"
+                  :key="item.meta.id"
+                  class="grid-item"
+                  @click="goToPage(item.path)"
+                >
+                  <el-icon
+                    ><component :is="item.meta.icon.replace('el-icon-', '')"
+                  /></el-icon>
+                  <span>{{ item.name }}</span>
+                </div>
+              </div>
+              <!-- 右侧：预留空白区（可后续扩展） -->
+              <div class="right-blank"></div>
+            </div>
+          </el-popover>
         </div>
         <div style="height: 17px; margin-left: 20px; white-space: nowrap">
           <el-breadcrumb separator="/" class="breadcrumb">
@@ -83,12 +115,14 @@
 import { Expand, Fold, FullScreen, Aim } from '@element-plus/icons-vue';
 import { useRoute } from 'vue-router';
 import { useFullscreen } from '@vueuse/core';
-import { onBeforeMount, onMounted, ref, computed } from 'vue';
+import { onBeforeMount, onMounted, inject, ref, computed } from 'vue';
 import { useMenuCollapseStore } from '@/stores/menu';
-import { inject } from 'vue';
+import { useRouter } from 'vue-router';
 onBeforeMount(() => {});
 onMounted(() => {});
+const router = useRouter();
 const isCollapse = ref(false); // 折叠状态
+const popoverVisible = ref(false);
 const useMenuCollapse = useMenuCollapseStore();
 const collapseIcon = computed(() =>
   useMenuCollapse.isCollapse ? Expand : Fold
@@ -159,6 +193,99 @@ const refreshView = inject('refreshView') as () => void;
 const handleRefresh = () => {
   refreshView();
 };
+const goToPage = (path: string) => {
+  popoverVisible.value = false;
+  router.push(path);
+};
+//常用入口功能示例
+const commonPages = [
+  {
+    path: '/notice/company',
+    name: '公司公告',
+    meta: {
+      title: '公司公告',
+      icon: 'el-icon-office-building',
+      hidden: false,
+      permissionCodes: ['notice:company'],
+      id: 11,
+      sort: 1,
+    },
+  },
+  {
+    path: '/notice/dept',
+    name: '部门公告',
+    meta: {
+      title: '部门公告',
+      icon: 'el-icon-office-building',
+      hidden: false,
+      permissionCodes: ['notice:dept'],
+      id: 12,
+      sort: 2,
+    },
+  },
+
+  {
+    path: '/function/file',
+    name: '文件处理',
+    meta: {
+      title: '文件处理',
+      icon: 'el-icon-files',
+      hidden: false,
+      permissionCodes: ['function:file'],
+      id: 13,
+      sort: 1,
+    },
+  },
+  {
+    path: '/function/text',
+    name: '文本编辑',
+    meta: {
+      title: '文本编辑',
+      icon: 'el-icon-edit',
+      hidden: false,
+      permissionCodes: ['function:text'],
+      id: 14,
+      sort: 2,
+    },
+  },
+  {
+    path: '/function/qrcode',
+    name: '二维码',
+    meta: {
+      title: '二维码',
+      icon: 'el-icon-menu',
+      hidden: false,
+      permissionCodes: ['function:qrcode'],
+      id: 15,
+      sort: 3,
+    },
+  },
+
+  {
+    path: '/component/chart',
+    name: '图表',
+    meta: {
+      title: '图表',
+      icon: 'el-icon-pie-chart',
+      hidden: false,
+      permissionCodes: ['component:chart'],
+      id: 16,
+      sort: 1,
+    },
+  },
+  //   {
+  //     path: '/component/map',
+  //     name: '地图',
+  //     meta: {
+  //       title: '地图',
+  //       icon: 'el-icon-MapLocation',
+  //       hidden: false,
+  //       permissionCodes: ['component:map'],
+  //       id: 17,
+  //       sort: 2,
+  //     },
+  //   },
+];
 </script>
 <style lang="scss" scoped>
 .topSty {
@@ -172,6 +299,83 @@ const handleRefresh = () => {
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+}
+.common-pages-grid {
+  height: 280px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding: 8px;
+}
+.grid-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  &:hover {
+    background-color: #f5f7fa;
+  }
+  .el-icon {
+    font-size: 24px;
+    margin-bottom: 4px;
+  }
+  span {
+    font-size: 12px;
+    color: #333;
+  }
+}
+</style>
+<style lang="scss">
+.common-pages-popover {
+  padding: 0 !important; // 移除默认内边距，以便我们精确控制
+  width: 600px;
+  height: 280px;
+  overflow: hidden;
+}
+.popover-content {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  .left-grid {
+    width: 66.666%; // 2/3
+    height: 100%;
+    padding: 16px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    overflow-y: auto; // 如果内容超出可滚动
+    .grid-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      &:hover {
+        background-color: #f5f7fa;
+      }
+      .el-icon {
+        font-size: 24px;
+        margin-bottom: 4px;
+      }
+      span {
+        font-size: 12px;
+        color: #333;
+      }
+    }
+  }
+  .right-blank {
+    width: 33.333%; // 1/3
+    height: 100%;
+    background-color: #fafafa; // 预留区域浅色背景
+    border-left: 1px solid #eee;
   }
 }
 </style>
