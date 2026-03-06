@@ -94,7 +94,8 @@ service.interceptors.response.use(
           _isRefreshTokenRequest: true, // 标记为刷新请求，避免携带旧 token 和再次被拦截
         }
       );
-
+     
+      console.log('axios res',res) 
       // 更新 store 中的 token
       userStore.setToken(res.data.access_token, res.data.refresh_token);
 

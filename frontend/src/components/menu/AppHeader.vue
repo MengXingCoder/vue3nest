@@ -88,7 +88,11 @@
         "
       >
         <div>
-          <el-select v-model="value" placeholder="Select" style="width: 200px">
+          <el-select
+            v-model="value"
+            placeholder="后续功能开发中..."
+            style="width: 200px"
+          >
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -110,7 +114,84 @@
           </el-tooltip>
         </div>
         <div>
-          <el-icon><ChatSquare /></el-icon>
+          <el-popover
+            placement="bottom"
+            :width="360"
+            trigger="click"
+            popper-class="message-pages-popover"
+          >
+            <template #reference>
+              <el-icon><ChatSquare /></el-icon>
+            </template>
+            <!-- 卡片内容：左右分栏 -->
+            <div>
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  margin-left: 20px;
+                "
+              >
+                <div style="margin: 16px; font-size: 20px; font-weight: 400">
+                  通知中心
+                </div>
+                <div style="margin: 16px; font-size: 16px; font-weight: 300">
+                  全部已读
+                </div>
+              </div>
+              <div>
+                <el-tabs
+                  v-model="activeName"
+                  class="demo-tabs"
+                  @tab-click="handleClick"
+                >
+                  <el-tab-pane label="通知(3)" name="first">
+                    <div
+                      style="
+                        margin-left: 10px;
+                        padding: 6px;
+                        height: 30px;
+                        font-size: 16px;
+                      "
+                    >
+                      1、公司将于xxxx年xx月xx日举办活动
+                    </div>
+                    <div
+                      style="
+                        margin: 10px;
+                        padding: 6px;
+                        height: 30px;
+                        font-size: 16px;
+                      "
+                    >
+                      2、公司将于xxxx年xx月xx日举办活动
+                    </div>
+                    <div
+                      style="
+                        margin-left: 10px;
+                        padding: 6px;
+                        height: 30px;
+                        font-size: 16px;
+                      "
+                    >
+                      3、公司将于xxxx年xx月xx日举办活动
+                    </div>
+                  </el-tab-pane>
+                  <el-tab-pane label="审批(1)" name="second">
+                    <div
+                      style="
+                        margin-left: 10px;
+                        padding: 6px;
+                        height: 30px;
+                        font-size: 16px;
+                      "
+                    >
+                      1、你有一个流程审批申请 请注意查看。
+                    </div> </el-tab-pane>
+                </el-tabs>
+              </div>
+            </div>
+          </el-popover>
         </div>
         <div style="margin: 0 20px">
           <el-icon><Setting /></el-icon>
@@ -136,6 +217,14 @@ const router = useRouter();
 const isCollapse = ref(false); // 折叠状态
 const popoverVisible = ref(false);
 const useMenuCollapse = useMenuCollapseStore();
+
+import type { TabsPaneContext } from 'element-plus';
+
+const activeName = ref('first');
+
+const handleClick = (tab: TabsPaneContext, event: Event) => {
+  console.log(tab, event);
+};
 const collapseIcon = computed(() =>
   useMenuCollapse.isCollapse ? Expand : Fold
 );
@@ -157,24 +246,8 @@ const value = ref('');
 
 const options = [
   {
-    value: 'Option1',
-    label: 'Option1',
-  },
-  {
-    value: 'Option2',
-    label: 'Option2',
-  },
-  {
-    value: 'Option3',
-    label: 'Option3',
-  },
-  {
-    value: 'Option4',
-    label: 'Option4',
-  },
-  {
-    value: 'Option5',
-    label: 'Option5',
+    value: '功能开发中...',
+    label: '功能开发中...',
   },
 ];
 // 计算面包屑
@@ -370,7 +443,7 @@ const profile = [
 </style>
 <style lang="scss">
 .common-pages-popover {
-  padding: 0 !important; // 移除默认内边距，以便我们精确控制
+  padding: 0 !important;
   width: 600px;
   height: 280px;
   overflow: hidden;
@@ -386,7 +459,7 @@ const profile = [
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
-    overflow-y: auto; // 如果内容超出可滚动
+    overflow-y: auto; // 内容超出可滚动
     .grid-item {
       display: flex;
       flex-direction: column;
@@ -412,10 +485,20 @@ const profile = [
   .right-blank {
     padding: 16px;
     display: grid;
-    width: 33.333%; // 1/3
+    width: 33.333%;
     height: 100%;
-    background-color: #fafafa; // 预留区域浅色背景
+    background-color: #fafafa;
     border-left: 1px solid #eee;
+  }
+}
+.message-pages-popover {
+  padding: 0 !important;
+  width: 360px;
+  height: 400px;
+  overflow: hidden;
+  border-radius: 6px;
+  .el-tabs__header .is-top > .el-tabs__nav-scroll {
+    margin-left: 30px;
   }
 }
 </style>
