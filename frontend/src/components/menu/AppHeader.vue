@@ -49,7 +49,19 @@
                 </div>
               </div>
               <!-- 右侧：预留空白区（可后续扩展） -->
-              <div class="right-blank"></div>
+              <div class="right-blank">
+                <div
+                  v-for="item in profile"
+                  :key="item.meta.id"
+                  class="grid-item"
+                  @click="goToPage(item.path)"
+                >
+                  <el-icon
+                    ><component :is="item.meta.icon.replace('el-icon-', '')"
+                  /></el-icon>
+                  <span>{{ item.name }}</span>
+                </div>
+              </div>
             </div>
           </el-popover>
         </div>
@@ -273,18 +285,44 @@ const commonPages = [
       sort: 1,
     },
   },
-  //   {
-  //     path: '/component/map',
-  //     name: '地图',
-  //     meta: {
-  //       title: '地图',
-  //       icon: 'el-icon-MapLocation',
-  //       hidden: false,
-  //       permissionCodes: ['component:map'],
-  //       id: 17,
-  //       sort: 2,
-  //     },
-  //   },
+];
+const profile = [
+  {
+    name: '密码修改',
+    path: '/profile/password',
+    meta: {
+      hidden: false,
+      icon: 'el-icon-key',
+      id: 20,
+      permissionCodes: ['profile:password'],
+      sort: 2,
+      title: '密码修改',
+    },
+  },
+  {
+    name: '信息查看',
+    path: '/profile/info',
+    meta: {
+      hidden: false,
+      icon: 'el-icon-ChatLineRound',
+      id: 19,
+      permissionCodes: ['profile:info'],
+      sort: 1,
+      title: '信息查看',
+    },
+  },
+  {
+    name: '功能开发中...',
+    path: '',
+    meta: {
+      hidden: false,
+      icon: 'el-icon-MoreFilled',
+      id: 19,
+      permissionCodes: ['profile:info'],
+      sort: 1,
+      title: '信息查看',
+    },
+  },
 ];
 </script>
 <style lang="scss" scoped>
@@ -372,6 +410,8 @@ const commonPages = [
     }
   }
   .right-blank {
+    padding: 16px;
+    display: grid;
     width: 33.333%; // 1/3
     height: 100%;
     background-color: #fafafa; // 预留区域浅色背景
