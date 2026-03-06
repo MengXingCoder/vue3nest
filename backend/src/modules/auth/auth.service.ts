@@ -51,10 +51,10 @@ export class AuthService {
       roles: profile.roles.map((role) => role.name), // 角色名称数组
       permissions: profile.permissions,
     };
-  
+
     console.log('jwt payload', payload);
     // 5. 签名 token
- 
+
     const access_token = this.jwtService.sign(payload, { expiresIn: '30m' });
     const refresh_token =
       await this.refreshTokenService.generateRefreshToken(user);
@@ -73,7 +73,6 @@ export class AuthService {
       await this.refreshTokenService.validateRefreshToken(refreshToken);
     const user = tokenEntity.user;
 
-    
     await this.refreshTokenService.revokeRefreshToken(refreshToken); // 作废旧token
     const newRefreshToken =
       await this.refreshTokenService.generateRefreshToken(user); //生成新的refresh token
@@ -91,8 +90,10 @@ export class AuthService {
     });
 
     return {
-      access_token: newAccessToken,
-      refresh_token: newRefreshToken,
+      data: {
+        access_token: newAccessToken,
+        refresh_token: newRefreshToken,
+      },
     };
   }
 }
